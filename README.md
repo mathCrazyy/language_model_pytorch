@@ -11,11 +11,12 @@
 
 ## 代码主体
 main.py 参考博文的原始代码，以英文为基础的，里面也有挺多问题，没有详细修正。  
-main_zh.py 训练主文件
-model.py 模型的具体实现
-test.py 测试模型，输入一个字符串，输出一个等长的字符串。
-train_eval.py 训练、验证主代码
-utils.py 文件加载以及字符转换。
+main_zh.py 训练主文件  
+model.py 模型的具体实现  
+test.py 测试模型，输入一个字符串，输出一个等长的字符串。  
+train_eval.py 训练、验证主代码  
+utils.py 文件加载以及字符转换。  
 
-参考: 
+
+##参考
 http://mlexplained.com/2018/02/15/language-modeling-tutorial-in-torchtext-practical-torchtext-part-2/
