@@ -10,11 +10,13 @@ from train_eval import train,test
 from torch.autograd import Variable as V
 
 from model import RNNModel
+from transformer import TransformerModel
 
 class Config(object):
     def __init__(self):
         self.model_name="lm_model"
-        self.data_ori="/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
+        #self.data_ori="/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
+        self.data_ori="E:/data/word_nlp/cnews_data/"
         self.train_path="train_0.csv"
         self.valid_path="train_0.csv"
         self.test_path="test_100.csv"
@@ -32,12 +34,18 @@ class Config(object):
         self.hidden_size=200
         self.nlayers=1
         self.dropout=0.5
-        self.epoch=2
+        self.epoch=1
 
         self.train_len=0
         self.test_len = 0
         self.valid_len = 0
         self.mode="train"
+
+        ## transformer的参数
+        self.dropout=0.5
+        self.max_len=5000
+        self.nhead=2
+
 #data_path="E:/study_series/2020_3/re_write_classify/data/"
 #data_path="/mnt/data3/wuchunsheng/code/nlper/NLP_task/text_classification/my_classification_cnews/2020_3_30/text_classify/data/"
 
@@ -47,8 +55,10 @@ train_iter, valid_iter, test_iter, TEXT=generate_data(config)
 
 
 device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model = RNNModel(config, TEXT).to(device)
+#model = RNNModel(config, TEXT).to(device)
 
-train(config,model,train_iter, valid_iter, test_iter)
+model=TransformerModel(config, TEXT).to(device)
+
+#train(config,model,train_iter, valid_iter, test_iter)
 
 test(config,model,TEXT,  test_iter)## 测试的是一个正批量的

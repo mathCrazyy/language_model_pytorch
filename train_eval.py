@@ -17,7 +17,8 @@ def train(config,model,train_iter, valid_iter,test_iter):
         for batch in train_iter:
             # reset the hidden state or else the model will try to backpropagate to the
             # beginning of the dataset, requiring lots of time and a lot of memory
-            model.reset_history()
+            if(model.mode_type!="transformer"):
+                model.reset_history()
 
             optimizer.zero_grad()
 
@@ -42,7 +43,8 @@ def train(config,model,train_iter, valid_iter,test_iter):
         model.eval()
         # model.train()
         for batch in valid_iter:
-            model.reset_history()
+            if(model.mode_type!="transformer"):
+                model.reset_history()
             text, targets = batch.text.to(config.device), batch.target.to(config.device)
             prediction = model(text).to(config.device)
             loss = criterion(prediction.view(-1, config.n_tokens), targets.view(-1)).to(config.device)
@@ -66,6 +68,7 @@ def test(config, model, TEXT, test_iter):
     print(len(inputs_word))
 
     arrs = model(b.text.cuda()).cuda().data.cpu().numpy()
+    print(arrs.shape)
     preds = word_ids_to_sentence(np.argmax(arrs, axis=2), TEXT.vocab)
 
     print(preds)
@@ -76,6 +79,7 @@ def test_sentence(config, model, TEXT, sentence):
     inputs = inputs.view(-1, 1)
     # print(inputs.shape)
     arrs = model(inputs)
+    print("arrs shape: ",arrs.shape)
     preds = word_ids_to_sentence(np.argmax(arrs.detach().cpu(), axis=2), TEXT.vocab)
 
     return preds
