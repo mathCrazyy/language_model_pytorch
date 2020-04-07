@@ -14,7 +14,7 @@ from model import RNNModel
 class Config(object):
     def __init__(self):
         self.model_name="lm_model"
-        self.data_ori="E:/data/word_nlp/cnews_data/"
+        self.data_ori="/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
         self.train_path="train_0.csv"
         self.valid_path="train_0.csv"
         self.test_path="test_100.csv"
@@ -37,6 +37,7 @@ class Config(object):
         self.train_len=0
         self.test_len = 0
         self.valid_len = 0
+        self.mode="train"
 #data_path="E:/study_series/2020_3/re_write_classify/data/"
 #data_path="/mnt/data3/wuchunsheng/code/nlper/NLP_task/text_classification/my_classification_cnews/2020_3_30/text_classify/data/"
 

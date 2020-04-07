@@ -72,7 +72,7 @@ def test(config, model, TEXT, test_iter):
 
 
 def test_sentence(config, model, TEXT, sentence):
-    inputs = torch.Tensor([TEXT.vocab[one] for one in sentence]).long().to(config.device)
+    inputs = torch.Tensor([TEXT.vocab.stoi[one] for one in sentence]).long().to(config.device)
     inputs = inputs.view(-1, 1)
     # print(inputs.shape)
     arrs = model(inputs)

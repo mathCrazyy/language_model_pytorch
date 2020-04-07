@@ -16,7 +16,7 @@ from model import RNNModel
 class Config(object):
     def __init__(self):
         self.model_name = "lm_model"
-        self.data_ori =  "E:/data/word_nlp/cnews_data/"
+        self.data_ori =  "/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
         self.train_path = "train_0.csv"
         self.valid_path = "train_0.csv"
         self.test_path = "test_100.csv"
