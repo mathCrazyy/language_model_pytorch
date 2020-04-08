@@ -16,8 +16,8 @@ from transformer import TransformerModel
 class Config(object):
     def __init__(self):
         self.model_name="lm_model"
-        #self.data_ori="/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
-        self.data_ori="E:/data/word_nlp/cnews_data/"
+        self.data_ori="/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
+        #self.data_ori="E:/data/word_nlp/cnews_data/"
         self.train_path="train_0.csv"
         self.valid_path="train_0.csv"
         self.test_path="test_100.csv"
@@ -35,7 +35,7 @@ class Config(object):
         self.hidden_size=200
         self.nlayers=1
         self.dropout=0.5
-        self.epoch=2
+        self.epoch=20
 
         self.train_len=0
         self.test_len = 0
@@ -59,8 +59,24 @@ model=TransformerModel(config, TEXT).to(config.device)
 
 model =load_model(config, model)
 
-sen="comment体育项目"
-sen="".join(['c', 'o', 'n', 't', 'e', 'x', 't', ',', 'l', 'a', 'b', 'e', 'l'])
-res=test_sentence(config, model ,TEXT, sen)
-print(res)
-
+#sen="目"*50
+sen="体育快讯"
+#sen="".join(['c', 'o', 'n', 't', 'e', 'x', 't', ',', 'l', 'a', 'b', 'e', 'l'])
+#res=test_sentence(config, model ,TEXT, sen)
+#print(sen)
+#print(res)
+#res=test(config,model,TEXT,  test_iter)
+#print(res)
+print("=========================")
+sen="篮球"
+#sen="体育"
+sen_ori=sen
+while(len(sen)<20):
+    print("输入文本: ",sen)
+    sen_pred=" ".join(test_sentence(config,model, TEXT,sen))
+    sen+=sen_pred[1:]
+    sen=sen.replace(" ","")
+    print("文本生成: ", sen)
+print("*"*20)
+print("输入: ", sen_ori)
+print("生成: ", sen)

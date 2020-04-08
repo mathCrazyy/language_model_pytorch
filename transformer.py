@@ -68,7 +68,8 @@ class TransformerModel(nn.Module):
 
         self.encoder=nn.Embedding(embeddings.shape[0],config.embedding_dim)
         self.decoder=nn.Linear(config.embedding_dim,embeddings.shape[0])
-        self.init_weights()
+        if config.mode!="test":
+            self.init_weights()
         config.n_tokens=embeddings.shape[0]
 
 
@@ -92,11 +93,16 @@ class TransformerModel(nn.Module):
                 self.src_mask=mask
         else:
             self.src_mask=None
+        #print("1: ", inputs)
         inputs=self.encoder(inputs)*math.sqrt(self.embedding_dim)
         inputs=self.pos_encoder(inputs)
+        #print("2: ", inputs)
         output=self.transformer_encoder(inputs, self.src_mask)
+        #print("3: output: ", output)
         #print("output shape11: ", output.shape)
         output=self.decoder(output)
+        #print("4:", output)
         #print("output shape22: ", output.shape)
-        return F.log_softmax(output, dim=1)
+        #print(F.log_softmax(output, dim=2))
+        return F.log_softmax(output, dim=2)
 

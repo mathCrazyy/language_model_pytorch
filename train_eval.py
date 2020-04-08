@@ -7,7 +7,8 @@ import numpy as np
 
 def train(config,model,train_iter, valid_iter,test_iter):
 
-    optimizer = optim.Adam(model.parameters(), lr=1e-3, betas=(0.7, 0.99))
+    #optimizer = optim.Adam(model.parameters(), lr=1e-3, betas=(0.7, 0.99))
+    optimizer = optim.Adam(model.parameters(), lr=1e-2, betas=(0.7, 0.99))
     criterion = nn.CrossEntropyLoss()
 
     for epoch in range(1, config.epoch + 1):
@@ -55,32 +56,60 @@ def train(config,model,train_iter, valid_iter,test_iter):
         torch.save(model.state_dict(), config.save_path)
 
 def test(config, model, TEXT, test_iter):
-
+    print("save_path: ", config.save_path)
+    model.load_state_dict(torch.load(config.save_path))
+    #print(model)
     b = next(iter(test_iter))
-    print("输入: ", b.text[0])
+    print(b.text.shape)
+    #print("输入: ", b.text[0])
     #print("输入的句子: ", word_ids_to_sentence(b.text[0],TEXT.vocab))
     #print("", word_sentence_to_ids(b.text[0],TEXT.vocab))
 
 
+    print("单条数据: ",b.text[:,1].shape)
 
     inputs_word = word_ids_to_sentence(b.text.cuda().data, TEXT.vocab)
-    print(inputs_word)
-    print(len(inputs_word))
+    #print(inputs_word)
+    #print(len(inputs_word))
 
     arrs = model(b.text.cuda()).cuda().data.cpu().numpy()
     print(arrs.shape)
     preds = word_ids_to_sentence(np.argmax(arrs, axis=2), TEXT.vocab)
+    return preds
+    #print(preds)
 
-    print(preds)
+def test_one_sentence(config, model , TEXT,test_iter):
+    print("save_path: ", config.save_path)
+    model.load_state_dict(torch.load(config.save_path))
+    #print(model)
+    b = next(iter(test_iter))
+    print(b.text.shape)
+    print("单条数据: ",b.text[:,1].shape)
+    print("单条数据: ",b.text[:,1].view(-1,1).shape)
+    inputs_word = word_ids_to_sentence(b.text[:,1].view(-1,1).cuda().data, TEXT.vocab)
+    print("inputs_word: ", inputs_word)
+    arrs = model(b.text[:,1].view(-1,1).cuda()).cuda().data.cpu().numpy()
+    preds = word_ids_to_sentence(np.argmax(arrs, axis=2), TEXT.vocab)
+    print("preds----------", preds)
+
 
 
 def test_sentence(config, model, TEXT, sentence):
+    model.load_state_dict(torch.load(config.save_path))
+    #print(model)
     inputs = torch.Tensor([TEXT.vocab.stoi[one] for one in sentence]).long().to(config.device)
+    print("inputs: ", inputs)
     inputs = inputs.view(-1, 1)
-    # print(inputs.shape)
+    #print("inputs: ", inputs)
+    print("inputs shape: ", inputs.shape)
+    #print(inputs)
     arrs = model(inputs)
     print("arrs shape: ",arrs.shape)
+    #print(arrs)
+    x=np.sum(np.array(arrs.detach().cpu()),axis=2)
     preds = word_ids_to_sentence(np.argmax(arrs.detach().cpu(), axis=2), TEXT.vocab)
+    #print(x)
+    print("preds: ",preds)
 
     return preds
 

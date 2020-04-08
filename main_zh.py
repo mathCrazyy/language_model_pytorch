@@ -5,7 +5,7 @@ import torchtext
 from torchtext import data
 import torch.nn as nn
 import torch.nn.functional as F
-from train_eval import train,test
+from train_eval import train,test, test_one_sentence
 
 from torch.autograd import Variable as V
 
@@ -15,8 +15,8 @@ from transformer import TransformerModel
 class Config(object):
     def __init__(self):
         self.model_name="lm_model"
-        #self.data_ori="/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
-        self.data_ori="E:/data/word_nlp/cnews_data/"
+        self.data_ori="/mnt/data3/wuchunsheng/data_all/data_mine/lm_data/"
+        #self.data_ori="E:/data/word_nlp/cnews_data/"
         self.train_path="train_0.csv"
         self.valid_path="train_0.csv"
         self.test_path="test_100.csv"
@@ -34,7 +34,7 @@ class Config(object):
         self.hidden_size=200
         self.nlayers=1
         self.dropout=0.5
-        self.epoch=1
+        self.epoch=100
 
         self.train_len=0
         self.test_len = 0
@@ -59,6 +59,9 @@ device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 model=TransformerModel(config, TEXT).to(device)
 
-#train(config,model,train_iter, valid_iter, test_iter)
+train(config,model,train_iter, valid_iter, test_iter)
 
-test(config,model,TEXT,  test_iter)## 测试的是一个正批量的
+#res=test(config,model,TEXT,  test_iter)## 测试的是一个正批量的
+#print(res)
+res=test_one_sentence(config, model, TEXT, test_iter)
+print(res)
